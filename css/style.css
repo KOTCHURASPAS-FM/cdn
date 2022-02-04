@@ -90,13 +90,6 @@ html {
   background-color: var(--main-color);
 }
 
-/*.input, .textarea, .select select {
-  background-color: white;
-  border-color: #dbdbdb;
-  border-radius: 4px;
-  color: #363636;
-}*/
-
 a {
     color: var(--main-color-light);
 }
