@@ -1,1 +1,51 @@
-$(document).ready(function(){var e=$("#loginButton"),t=$("#form"),n=$("#loading");function o(){e.fadeOut("fast"),t.fadeOut("fast",function(){n.fadeIn("fast",function(){var o=$("#login").val(),a=$("#pass").val(),s=new XMLHttpRequest;s.open("POST","/login",!0),s.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),s.timeout=5e3,s.ontimeout=function(e){AddNotify('{"header":"Ошибка","msg":"Не удалось запросить <b>'+artist+" - "+song+'</b>","type":"danger"}')},s.send("login="+o+"&pass="+a),s.onreadystatechange=function(){if(4==s.readyState&&200==s.status){var o=JSON.parse(s.responseText);"error"==o.server_msg?(AddNotify(JSON.stringify(o.notify)),n.fadeOut("fast",function(){t.fadeIn("fast"),e.fadeIn("fast")})):"success"==o.server_msg&&location.replace("/")}}})})}$("#form").keypress(function(e){"13"==(e.keyCode?e.keyCode:e.which)&&o()}),e.on("click",function(){o()})});
+$(document).ready(function() {
+	var loginButton = $('#loginButton'),
+		form = $('#form'),
+    	loading = $('#loading');
+
+    function Login() {
+    	loginButton.fadeOut('fast');
+    	form.fadeOut('fast', function() {
+    		loading.fadeIn('fast', function() {
+    			var login = $('#login').val(),
+    				password = $('#pass').val(),
+    				xhr = new XMLHttpRequest();
+
+	    		xhr.open('POST', '/login', true);
+	            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	            xhr.timeout = 5000;
+	            xhr.ontimeout = function (e) {
+	                AddNotify('{"header":"Ошибка","msg":"Не удалось запросить <b>' + artist + ' - ' + song + '</b>","type":"danger"}');
+	            };
+	            xhr.send('login=' + login + '&pass='  + password);
+	            xhr.onreadystatechange = function () {
+	                if (xhr.readyState == 4) {
+	                    if (xhr.status == 200) {
+	                    	var otvet = JSON.parse(xhr.responseText);
+	                    	if(otvet['server_msg'] == 'error') {
+	                    		AddNotify(JSON.stringify(otvet['notify']));
+	                    		loading.fadeOut('fast', function() {
+	                    			form.fadeIn('fast');
+	                    			loginButton.fadeIn('fast');
+	                    		})
+	                    	} else if(otvet['server_msg'] == 'success') {
+	                    		location.replace('/');
+	                    	}
+	                    }
+	                }
+	            }
+    		});
+    	});
+    }
+
+    $('#form').keypress(function(event){
+	    var keycode = (event.keyCode ? event.keyCode : event.which);
+	    if(keycode == '13'){
+	        Login();
+	    }
+	});
+
+    loginButton.on('click', function() {
+    	Login();
+    });
+});
